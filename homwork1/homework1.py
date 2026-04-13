@@ -77,7 +77,7 @@ if message.tool_calls:
         messages=messages
     )
 
-    print(final_response.choices[0].message.content)
+    print(f"\n🤖: {final_response.choices[0].message.content}\n")
 
 else:
     print(message.content)
