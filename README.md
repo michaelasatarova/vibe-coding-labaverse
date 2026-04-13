@@ -1,7 +1,3 @@
-# OpenAI
-
-Examples of communicating with the OpenAI API.
-
 ## Prerequisites
 
 - Python 3.12+
@@ -22,13 +18,4 @@ In each subfolder:
 
 ```bash
 uv run main.py
-```
-
-Or manually:
-
-```bash
-uv venv
-source .venv/bin/activate
-uv sync
-python main.py
 ```
