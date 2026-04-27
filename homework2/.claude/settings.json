@@ -1,0 +1,88 @@
+//https://code.claude.com/docs/en/permissions
+{
+  "permissions": {
+    "allow": [
+      "Agent",
+      "AskUserQuestion",
+      "Bash",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "Edit",
+      "EnterPlanMode",
+      "EnterWorktree",
+      "ExitPlanMode",
+      "ExitWorktree",
+      "Glob",
+      "Grep",
+      "ListMcpResourcesTool",
+      "Read",
+      "ReadMcpResourceTool",
+      "Skill",
+      "TaskCreate",
+      "TaskGet",
+      "TaskList",
+      "TaskOutput",
+      "TaskStop",
+      "TaskUpdate",
+      "ToolSearch",
+      "Write",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~/)",
+      "Bash(rm -r -f /)",
+      "Bash(rm -r -f ~)",
+      "Bash(rm -r -f /*)",
+      "Bash(rm -r -f ~/)",
+      "Bash(sudo rm -rf /)",
+      "Bash(sudo rm -rf ~)",
+      "Bash(sudo rm -rf /*)",
+      "Bash(sudo rm -rf ~/)",
+      "Bash(sudo rm -r -f /)",
+      "Bash(sudo rm -r -f ~)",
+      "Bash(sudo rm -r -f /*)",
+      "Bash(sudo rm -r -f ~/)",
+
+      "Read(./vendor/**)",
+      "Glob(./vendor/**)",
+      "Grep(./vendor/**)",
+      "Edit(./vendor/**)",
+      "Write(./vendor/**)",
+
+      "Read(./vendorCache/**)",
+      "Glob(./vendorCache/**)",
+      "Grep(./vendorCache/**)",
+      "Edit(./vendorCache/**)",
+      "Write(./vendorCache/**)",
+
+      "Read(./coverage/**)",
+      "Glob(./coverage/**)",
+      "Grep(./coverage/**)",
+      "Edit(./coverage/**)",
+      "Write(./coverage/**)",
+
+      "Read(./yarn/**)",
+      "Glob(./yarn/**)",
+      "Grep(./yarn/**)",
+      "Edit(./yarn/**)",
+      "Write(./yarn/**)",
+
+      "Read(./gitlab/**)",
+      "Glob(./gitlab/**)",
+      "Grep(./gitlab/**)",
+      "Edit(./gitlab/**)",
+      "Write(./gitlab/**)",
+
+      "Read(./husky/**)",
+      "Glob(./husky/**)",
+      "Grep(./husky/**)",
+      "Edit(./husky/**)",
+      "Write(./husky/**)"
+    ]
+  }
+}
