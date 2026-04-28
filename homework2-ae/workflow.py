@@ -16,8 +16,9 @@ Usage:
     python3 workflow.py
 """
 
-import subprocess
 import anyio
+
+from claude_cli import call_claude
 
 # Sample PR diff used as input when running standalone
 SAMPLE_DIFF = """
@@ -53,22 +54,6 @@ diff --git a/auth/login.py b/auth/login.py
 """
 
 
-def call_claude(prompt: str) -> str:
-    """Call the claude CLI and return its response text."""
-    result = subprocess.run(
-        ["claude", "--print"],
-        input=prompt,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(
-            f"Claude CLI error: {result.stderr or result.stdout or '(no output)'}"
-        )
-    return result.stdout.strip()
-
-
 async def run_reviewer(name: str, specialty: str, prompt: str) -> tuple[str, str]:
     """Run a single reviewer agent in its own isolated session."""
     print(f"[{name}] Starting review...")
@@ -79,10 +64,13 @@ async def run_reviewer(name: str, specialty: str, prompt: str) -> tuple[str, str
         f"code snippets where relevant.\n\n{prompt}"
     )
 
-    result = await anyio.to_thread.run_sync(lambda: call_claude(full_prompt))
-
-    print(f"[{name}] Review complete")
-    return name, result
+    try:
+        result = await anyio.to_thread.run_sync(lambda: call_claude(full_prompt))
+        print(f"[{name}] Review complete")
+        return name, result
+    except Exception as exc:
+        print(f"[{name}] Review failed: {exc}")
+        return name, f"[Review failed: {exc}]"
 
 
 async def code_review_pipeline(diff: str) -> None:

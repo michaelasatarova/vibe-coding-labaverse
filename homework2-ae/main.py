@@ -20,22 +20,9 @@ Usage:
 
 import json
 import re
-import subprocess
 import sys
 
-
-def call_claude(prompt: str) -> str:
-    """Call the claude CLI and return its response text."""
-    result = subprocess.run(
-        ["claude", "--print"],
-        input=prompt,
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
-    if result.returncode != 0:
-        raise RuntimeError(f"Claude CLI error: {result.stderr or result.stdout or '(no output)'}")
-    return result.stdout.strip()
+from claude_cli import call_claude
 
 
 # ── Agent definitions ────────────────────────────────────────────────────────
@@ -113,19 +100,32 @@ To return the final answer:
 ```"""
 
         response = call_claude(prompt)
-        print(f"Supervisor raw output: {response}")
 
         # Extract JSON from ```json ... ``` block
         match = re.search(r"```json\s*(\{.*?\})\s*```", response, re.DOTALL)
         if match:
-            return json.loads(match.group(1))
+            try:
+                parsed = json.loads(match.group(1))
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Supervisor returned invalid JSON: {exc}\nRaw: {response}") from exc
+        else:
+            # Fallback: find raw JSON object
+            start = response.find("{")
+            end = response.rfind("}") + 1
+            if start == -1 or end == 0:
+                raise ValueError(f"No JSON found in supervisor response: {response}")
+            try:
+                parsed = json.loads(response[start:end])
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Supervisor returned invalid JSON: {exc}\nRaw: {response}") from exc
 
-        # Fallback: find raw JSON object
-        start = response.find("{")
-        end = response.rfind("}") + 1
-        if start == -1 or end == 0:
-            raise ValueError(f"No JSON found in supervisor response: {response}")
-        return json.loads(response[start:end])
+        action = parsed.get("action")
+        if action == "finish":
+            print(f"Supervisor output: {parsed.get('answer', '')}")
+        elif action == "delegate":
+            print(f"Supervisor output: delegating to '{parsed.get('delegate_to')}' — {parsed.get('task', '')}")
+
+        return parsed
 
     def execute(self, initial_task: str) -> str:
         """Execute the supervisor pattern with the initial task.
