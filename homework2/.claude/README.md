@@ -10,6 +10,9 @@ Analyzes and explains how a given file or code block works.
 - Prompt: `How does this code work?`
 - Direct invoke: `/explain-code website/app/forms/User/LoginForm.php`
 
+## Available MCP 
+- sentry
+
 ## Libraries (adding more skills, tools, mcp )
 Always search for official ones.
 
